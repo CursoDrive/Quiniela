@@ -71,7 +71,7 @@
 
 <body>
 
-<h1>🐷 Quiniela La Marrana</h1>
+<h1>🐷 Quiniela La Marrana 3ra Edición</h1>
 
 <div id="matches">Cargando partidos...</div>
 
@@ -124,9 +124,9 @@ function renderMatches() {
     div.innerHTML = `
       <div class="teams">${index + 1}. ${m.local} vs ${m.visitante}</div>
       <div class="options">
-        <button onclick="pick(${index}, '1')">1</button>
-        <button onclick="pick(${index}, 'X')">X</button>
-        <button onclick="pick(${index}, '2')">2</button>
+        <button onclick="pick(${index}, '1')">L</button>
+        <button onclick="pick(${index}, 'X')">E</button>
+        <button onclick="pick(${index}, '2')">V</button>
       </div>
     `;
 
