@@ -83,7 +83,7 @@
    CONFIGURACIÓN
 ========================= */
 
-const API_URL = "https://api.sheety.co/a68c9c272a0c33e8a61e96cc41c0b5d2/laMarrana/hoja1";
+const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vS3inDEgG3AaPuV3QB_xhQoGnS7DUP5asqsHzSDWZ-nA-orEm64xYivKfhnCgxnOL2L42Q9WrfvVVLJ/pub?gid=0&single=true&output=csv";
 const WHATSAPP_NUMBER = "524425490111";
 
 /* =========================
@@ -97,14 +97,24 @@ let picks = {};
    CARGAR PARTIDOS
 ========================= */
 
-fetch(API_URL)
-  .then(res => res.json())
-  .then(data => {
-    matches = data.hoja1.sort((a, b) => a.id - b.id);
+fetch(CSV_URL)
+  .then(res => res.text())
+  .then(csv => {
+    const rows = csv.trim().split("\n").slice(1);
+
+    matches = rows.map(row => {
+      const [id, local, visitante] = row.split(",");
+      return {
+        id: id.trim(),
+        local: local.trim(),
+        visitante: visitante.trim()
+      };
+    });
+
     renderMatches();
   })
   .catch(err => {
-    console.error("Error cargando partidos:", err);
+    console.error("Error cargando CSV:", err);
     document.getElementById("matches").innerText =
       "❌ Error cargando partidos";
   });
@@ -124,9 +134,9 @@ function renderMatches() {
     div.innerHTML = `
       <div class="teams">${index + 1}. ${m.local} vs ${m.visitante}</div>
       <div class="options">
-        <button onclick="pick(${index}, '1')">L</button>
-        <button onclick="pick(${index}, 'X')">E</button>
-        <button onclick="pick(${index}, '2')">V</button>
+        <button onclick="pick(${index}, 'L')">L</button>
+        <button onclick="pick(${index}, 'E')">E</button>
+        <button onclick="pick(${index}, 'V')">V</button>
       </div>
     `;
 
@@ -154,13 +164,14 @@ function pick(matchIndex, choice) {
 ========================= */
 
 function generateText() {
-  let text = "🐷 *Quiniela La Marrana*\n\n";
+  let text = "*Quiniela La Marrana*\n\n";
 
   matches.forEach((m, i) => {
     const pick = picks[i] || "-";
     text += `${i + 1}. ${m.local} vs ${m.visitante} → ${pick}\n`;
   });
-
+  const fechaHora = new Date().toLocaleString('es-MX');
+  text += `\n ${fechaHora}`;
   return text;
 }
 
