@@ -83,10 +83,7 @@
    CONFIGURACIÓN
 ========================= */
 
-// 🔁 PEGA AQUÍ TU URL DE SHEETY
 const API_URL = "https://api.sheety.co/a68c9c272a0c33e8a61e96cc41c0b5d2/laMarrana/hoja1";
-
-// 📱 TU NÚMERO DE WHATSAPP (con código país)
 const WHATSAPP_NUMBER = "524425490111";
 
 /* =========================
@@ -103,12 +100,13 @@ let picks = {};
 fetch(API_URL)
   .then(res => res.json())
   .then(data => {
-    matches = data.partidos;
+    matches = data.hoja1.sort((a, b) => a.id - b.id);
     renderMatches();
   })
-  .catch(() => {
+  .catch(err => {
+    console.error("Error cargando partidos:", err);
     document.getElementById("matches").innerText =
-      "❌ Error al cargar los partidos";
+      "❌ Error cargando partidos";
   });
 
 /* =========================
@@ -124,11 +122,11 @@ function renderMatches() {
     div.className = "match";
 
     div.innerHTML = `
-      <div class="teams">${m.local} vs ${m.visitante}</div>
+      <div class="teams">${index + 1}. ${m.local} vs ${m.visitante}</div>
       <div class="options">
-        <button onclick="pick(${index}, 'L')">L</button>
-        <button onclick="pick(${index}, 'E')">E</button>
-        <button onclick="pick(${index}, 'V')">V</button>
+        <button onclick="pick(${index}, '1')">1</button>
+        <button onclick="pick(${index}, 'X')">X</button>
+        <button onclick="pick(${index}, '2')">2</button>
       </div>
     `;
 
@@ -143,9 +141,8 @@ function renderMatches() {
 function pick(matchIndex, choice) {
   picks[matchIndex] = choice;
 
-  const buttons = document.querySelectorAll(
-    `.match:nth-child(${matchIndex + 1}) button`
-  );
+  const matchDiv = document.querySelectorAll(".match")[matchIndex];
+  const buttons = matchDiv.querySelectorAll("button");
 
   buttons.forEach(btn => {
     btn.classList.toggle("active", btn.innerText === choice);
@@ -179,8 +176,7 @@ document.getElementById("sendBtn").addEventListener("click", () => {
   }
 
   const text = generateText();
-  const url =
-    `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(text)}`;
+  const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(text)}`;
 
   window.open(url, "_blank");
 });
@@ -188,3 +184,4 @@ document.getElementById("sendBtn").addEventListener("click", () => {
 
 </body>
 </html>
+
