@@ -86,7 +86,7 @@
 ========================= */
 
 const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vS3inDEgG3AaPuV3QB_xhQoGnS7DUP5asqsHzSDWZ-nA-orEm64xYivKfhnCgxnOL2L42Q9WrfvVVLJ/pub?gid=0&single=true&output=csv";
-const WHATSAPP_NUMBER = "524425490111";
+const WHATSAPP_NUMBER = "52442 364 6495";
 
 /* =========================
    VARIABLES
@@ -133,8 +133,12 @@ function renderMatches() {
     const div = document.createElement("div");
     div.className = "match";
 
+    const esComodin = index === matches.length - 1;
+
     div.innerHTML = `
-      <div class="teams">${index + 1}. ${m.local} vs ${m.visitante}</div>
+      <div class="teams">
+        ${esComodin ? "Comodín - " : ""}${index + 1}. ${m.local} vs ${m.visitante}
+      </div>
       <div class="options">
         <button onclick="pick(${index}, 'L')">L</button>
         <button onclick="pick(${index}, 'E')">E</button>
@@ -145,6 +149,7 @@ function renderMatches() {
     container.appendChild(div);
   });
 }
+
 
 /* =========================
    SELECCIONAR RESULTADO
